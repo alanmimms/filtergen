@@ -74,12 +74,13 @@ const plotTop = `${(bpTop * 1.2).toFixed(1)}e6`;
 
 // tankN (where N = number of coupling capacitors) is the filter's output node.
 const nTanks = coupling.length - 1;
-let prevNode = 'filtIn';
+const inNode = 'filtIn';
 const outNode = 'filtOut';
+let prevNode = inNode;
 
 console.log(`
 * ${title}
-* Passband: ${bpBottom} - ${bpTop} MHz  ${ripple}dB ripple ${z}-ohm
+* Passband ${bpBottom} - ${bpTop} MHz   ${ripple}dB ripple   ${z} ohm
 
 Vin in 0 AC 1
 Rin in ${prevNode}  ${z}
@@ -99,6 +100,13 @@ CC${nodeN} ${prevNode} ${tankNode} ${cc}
     ccString += `\
 CT${nodeN} ${tankNode} 0 ${res[n].c}
 LT${nodeN} ${tankNode} 0 ${res[n].l}
+* Behavioral source acting as a parallel resistor with value RP = Q*2*pi*f*L
+* The current is I = V/RP = V(tank1,0) / (50 * 6.28318 * freq * 300e-9)
+* This is for API Delevan 0301KS Series 160 Iron Core inductor Q=50@25MHz.
+* (this doesn't work because "freq" is not defined in DC setup analysis).	    
+* B_QLT${nodeN} ${tankNode} 0 I = if(freq > 0, v(${tankNode},0)/(5.6548e-4 * freq), 0)
+* This resistor simulates a Q=150@14.5MHz.
+RqLT${nodeN} ${tankNode} 0 4.1k
 `;
 
     prevNode = tankNode;
@@ -117,7 +125,7 @@ LT${nodeN} ${tankNode} 0 ${res[n].l}
   ac lin 2001 1e6 33e6
 
   * Plot with a narrower view to inspect the skirts
-  plot db(v(${outNode})) xlimit ${plotBot} ${plotTop} ylimit -80 0
+  plot db(v(${outNode}) / v(${inNode})) xlimit ${plotBot} ${plotTop} ylimit -80 6
 .endc
 
 .end
