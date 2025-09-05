@@ -1,0 +1,59 @@
+
+* 3-Resonator Bandpass Filter.
+* Passband 6.9 - 7.5 MHz   1dB ripple   50 ohm
+
+Vin in 0 AC 1
+Rin in filtIn  50
+Rload filtOut 0 50
+
+CC1 filtIn tank1 186.58p
+CT1 tank1 0 1.38n
+LT1 tank1 0 300.00n
+* Behavioral source acting as a parallel resistor with value RP = Q*2*pi*f*L
+* The current is I = V/RP = V(tank1,0) / (50 * 6.28318 * freq * 300e-9)
+* This is for API Delevan 0301KS Series 160 Iron Core inductor Q=50@25MHz.
+* (this doesn't work because "freq" is not defined in DC setup analysis).	    
+* B_QLT1 tank1 0 I = if(freq > 0, v(tank1,0)/(5.6548e-4 * freq), 0)
+* This resistor simulates a Q=150@14.5MHz.
+RqLT1 tank1 0 4.1k
+
+CC2 tank1 tank2 95.36p
+CT2 tank2 0 1.44n
+LT2 tank2 0 300.00n
+* Behavioral source acting as a parallel resistor with value RP = Q*2*pi*f*L
+* The current is I = V/RP = V(tank1,0) / (50 * 6.28318 * freq * 300e-9)
+* This is for API Delevan 0301KS Series 160 Iron Core inductor Q=50@25MHz.
+* (this doesn't work because "freq" is not defined in DC setup analysis).	    
+* B_QLT2 tank2 0 I = if(freq > 0, v(tank2,0)/(5.6548e-4 * freq), 0)
+* This resistor simulates a Q=150@14.5MHz.
+RqLT2 tank2 0 4.1k
+
+CC3 tank2 tank3 95.36p
+CT3 tank3 0 1.38n
+LT3 tank3 0 300.00n
+* Behavioral source acting as a parallel resistor with value RP = Q*2*pi*f*L
+* The current is I = V/RP = V(tank1,0) / (50 * 6.28318 * freq * 300e-9)
+* This is for API Delevan 0301KS Series 160 Iron Core inductor Q=50@25MHz.
+* (this doesn't work because "freq" is not defined in DC setup analysis).	    
+* B_QLT3 tank3 0 I = if(freq > 0, v(tank3,0)/(5.6548e-4 * freq), 0)
+* This resistor simulates a Q=150@14.5MHz.
+RqLT3 tank3 0 4.1k
+
+CC4 tank3 filtOut 186.58p
+
+
+* --- Control and Plotting ---
+.control
+  run
+  set color0 = white
+  set color1 = black
+  set xgridwidth = 2
+  
+  ac lin 2001 1e6 33e6
+
+  * Plot with a narrower view to inspect the skirts
+  plot db(v(filtOut) / v(filtIn)) xlimit 5.5e6 9.0e6 ylimit -80 6
+.endc
+
+.end
+

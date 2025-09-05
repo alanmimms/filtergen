@@ -1,0 +1,46 @@
+* 5th Order Chebyshev Bandpass Filter (v8 - Revised Plot Settings)
+* Passband: 14.0-15.1 MHz, 0.1dB Ripple, 50-ohm
+
+* --- Source and Load ---
+Vin in 0 AC 1
+Rin in filt_in 50
+Rload filt_out 0 50
+
+* --- The Filter Components (Pi Topology with TEXTBOOK-DERIVED VALUES) ---
+
+* Resonator 1: Shunt Parallel LC at the input
+C1 filt_in 0 3.32n
+L1 filt_in 0 36.1n
+
+* Resonator 2: Series LC coupling element
+C2 filt_in n2a 12.1p
+L2 n2a n1 9.92u
+
+* Resonator 3: Shunt Parallel LC in the center
+C3 n1 0 5.72n
+L3 n1 0 21.0n
+
+* Resonator 4: Series LC coupling element
+C4 n1 n4a 12.1p
+L4 n4a filt_out 9.92u
+
+* Resonator 5: Shunt Parallel LC at the output
+C5 filt_out 0 3.32n
+L5 filt_out 0 36.1n
+
+* --- Analysis Section ---
+* Simulate a wider range, but plot a narrower one.
+.ac lin 2001 1e6 33e6
+
+* --- Control and Plotting ---
+.control
+  run
+  set color0 = white
+  set color1 = black
+  set xgridwidth = 2
+  
+  * Plot with a narrower view to inspect the skirts
+  plot db(v(filt_out)) xlimit 10e6 20e6 ylimit -80 0
+.endc
+
+.end
