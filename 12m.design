@@ -1,0 +1,20 @@
+Direct Coupled Resonator Bandpass Filter Designer
+https://www.changpuak.ch/electronics/Direct-Coupled-Resonator-Bandpass.php
+Javascript Version : 11. February 2015
+-----------------------------------------------------------------------------
+Design Data for a 3-Resonator Bandpass Filter.
+Center Frequency          :    24.800 MHz
+Bandwidth                 :    0.600 MHz  
+Passband Ripple           :    1 dB (Chebyshev Characteristic)
+System Impedance          :    50 Ohm 
+-----------------------------------------------------------------------------
+Coupling Capacitor : 38.26 pF
+Resonator #1 C : 826.19 pF // L : 47.00 nH
+Coupling Capacitor : 14.94 pF
+Resonator #2 C : 846.39 pF // L : 47.00 nH
+Coupling Capacitor : 14.94 pF
+Resonator #3 C : 826.19 pF // L : 47.00 nH
+Coupling Capacitor : 38.26 pF
+-----------------------------------------------------------------------------
+Please verify by simulation that attenuation above passband is sufficient.
+Negative capacitances indicate an unhappy inductance.
